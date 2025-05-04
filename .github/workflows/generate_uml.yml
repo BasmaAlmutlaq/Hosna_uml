@@ -1,37 +1,48 @@
-name: Generate UML PNG
+name: Generate UML Diagram
 
 on:
   push:
     branches: [ main ]
 
 jobs:
-  generate-uml-image:
+  generate-uml:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Java (required by PlantUML)
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1
+
+      - name: Install code_uml
+        run: dart pub global activate code_uml
+
+      - name: Generate UML (.puml)
+        run: |
+          dart pub global run code_uml --from=lib --to=uml_output --uml=plantuml
+        env:
+          DART_HOME: ${{ steps.dart.outputs.dart-sdk-path }}
+
+      - name: Set up Java
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Install Graphviz (required by PlantUML)
+      - name: Install Graphviz
         run: sudo apt-get update && sudo apt-get install -y graphviz
 
       - name: Download PlantUML CLI
-        run: |
-          curl -L -o plantuml.jar https://github.com/plantuml/plantuml/releases/latest/download/plantuml.jar
+        run: curl -L -o plantuml.jar https://github.com/plantuml/plantuml/releases/latest/download/plantuml.jar
 
-      - name: Generate UML diagrams (PNG)
+      - name: Generate PNG from .puml
         run: |
-          mkdir -p uml_output
-          find . -name '*.puml' -exec java -jar plantuml.jar -tpng -o uml_output {} +
+          mkdir -p uml_png
+          find uml_output -name '*.puml' -exec java -jar plantuml.jar -tpng -o uml_png {} +
 
-      - name: Upload UML PNG diagram
+      - name: Upload UML diagrams
         uses: actions/upload-artifact@v4
         with:
-          name: UML-PNG-Diagrams
-          path: uml_output
+          name: UML-Diagrams
+          path: uml_png
