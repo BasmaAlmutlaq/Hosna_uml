@@ -16,7 +16,7 @@ jobs:
         uses: dart-lang/setup-dart@v1
 
       - name: Install dependencies
-        run: dart pub get
+        run: flutter pub get
 
       - name: Generate UML
         run: dart run dart_uml:generate --output-dir=uml_output
