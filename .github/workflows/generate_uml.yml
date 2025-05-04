@@ -12,16 +12,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1
         with:
-          flutter-version: '3.19.6'  # Replace with your version if needed
+          sdk: '3.3.0'
 
-      - name: Install dependencies
-        run: flutter pub get
+      - name: Install code_uml
+        run: dart pub global activate code_uml
 
       - name: Generate UML
-        run: dart run dart_uml:generate --output-dir=uml_output
+        run: code_uml --from=lib --to=uml_output --uml=plantuml
 
       - name: Upload UML diagram as artifact
         uses: actions/upload-artifact@v4
