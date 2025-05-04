@@ -20,9 +20,9 @@ jobs:
       - name: Install code_uml
         run: dart pub global activate code_uml
 
-     - name: Generate UML
-      run: |
-        code_uml --from=$(pwd)/lib --to=$(pwd)/uml_output --uml=plantuml
+      - name: Generate UML
+        run: |
+          code_uml --from=$(pwd)/lib --to=$(pwd)/uml_output --uml=plantuml
 
       - name: Upload UML diagram as artifact
         uses: actions/upload-artifact@v4
