@@ -1,0 +1,28 @@
+name: Generate UML Diagram
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  generate-uml:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1
+
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: Generate UML
+        run: dart run dart_uml:generate --output-dir=uml_output
+
+      - name: Upload UML diagram as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: UML-Diagram
+          path: uml_output/
