@@ -22,7 +22,7 @@ jobs:
         run: dart run dart_uml:generate --output-dir=uml_output
 
       - name: Upload UML diagram as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: UML-Diagram
           path: uml_output/
