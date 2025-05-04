@@ -14,34 +14,25 @@ jobs:
 
       - name: Set up Dart
         uses: dart-lang/setup-dart@v1
+        with:
+          sdk: '3.7.3'
 
-      - name: Install code_uml
+      - name: Install code_uml globally
         run: dart pub global activate code_uml
 
-      - name: Generate UML (.puml)
+      - name: Generate UML .puml files
         run: |
-          dart pub global run code_uml --from=$GITHUB_WORKSPACE/lib --to=$GITHUB_WORKSPACE/uml_output --uml=plantuml
-        env:
-          DART_HOME: ${{ steps.dart.outputs.dart-sdk-path }}
+          dart pub global run code_uml --from=$(pwd)/lib --to=uml_output --uml=plantuml
 
-      - name: Set up Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '17'
+      - name: Install PlantUML
+        run: sudo apt-get update && sudo apt-get install -y plantuml
 
-      - name: Install Graphviz
-        run: sudo apt-get update && sudo apt-get install -y graphviz
-
-      - name: Download PlantUML CLI
-        run: curl -L -o plantuml.jar https://github.com/plantuml/plantuml/releases/latest/download/plantuml.jar
-
-      - name: Generate PNG from .puml
+      - name: Generate PNG UML diagrams
         run: |
           mkdir -p uml_png
-          find uml_output -name '*.puml' -exec java -jar plantuml.jar -tpng -o uml_png {} +
+          plantuml -tpng uml_output/*.puml -o ../uml_png
 
-      - name: Upload UML diagrams
+      - name: Upload UML diagram images
         uses: actions/upload-artifact@v4
         with:
           name: UML-Diagrams
