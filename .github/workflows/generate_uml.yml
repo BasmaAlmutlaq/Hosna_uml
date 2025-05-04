@@ -20,7 +20,7 @@ jobs:
 
       - name: Generate UML (.puml)
         run: |
-          dart pub global run code_uml --from=lib --to=uml_output --uml=plantuml
+          dart pub global run code_uml --from=$GITHUB_WORKSPACE/lib --to=$GITHUB_WORKSPACE/uml_output --uml=plantuml
         env:
           DART_HOME: ${{ steps.dart.outputs.dart-sdk-path }}
 
